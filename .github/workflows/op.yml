@@ -165,11 +165,13 @@ jobs:
         [ -e patch ] && cp -rf patch/nginx/luci.locations openwrt/feeds/packages/net/nginx/files-luci-support
         [ -e patch ] && cp -rf patch/nginx/uci.conf.template openwrt/feeds/packages/net/nginx-util/files
 
-        
-    - name: 添加玩客云
+    - name: 添加玩客云 (公开源替代)
       run: |
-        git clone https://github.com/shiyu1314/s805.git -b 6.12 openwrt/target/linux/amlogic
-         
+        # 克隆主流的 Amlogic 核心代码
+        git clone https://github.com/ophub/amlogic-s9xxx-openwrt.git -b main openwrt/target/linux/amlogic
+        # 复制玩客云专用的内核配置文件 (如果你的 patch 目录下有 target 配置)
+        [ -e patch/target ] && cp -rf patch/target/* openwrt/target/linux/amlogic/ || true
+        
     - name: 加载自定义配置
       run: |
         [ -e files ] && mv files openwrt/files
