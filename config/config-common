@@ -92,3 +92,15 @@ CONFIG_ZLIB_OPTIMIZE_SPEED=y
 ### Zram
 CONFIG_PACKAGE_zram-swap=y
 CONFIG_ZRAM_DEF_COMP_LZ4=y
+
+# WireGuard Core
+CONFIG_PACKAGE_kmod-wireguard=y
+CONFIG_PACKAGE_wireguard-tools=y
+
+# WireGuard Dependencies
+CONFIG_PACKAGE_kmod-crypto-lib-chacha20poly1305=y
+CONFIG_PACKAGE_kmod-crypto-lib-curve25519=y
+CONFIG_PACKAGE_kmod-udptunnel4=y
+CONFIG_PACKAGE_kmod-udptunnel6=y
+
+
