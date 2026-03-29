@@ -168,7 +168,7 @@ jobs:
         
     - name: 添加玩客云
       run: |
-        git clone https://shiyu1314:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/shiyu1314/s805 -b 6.12 openwrt/target/linux/amlogic
+        git clone https://github.com/shiyu1314/s805.git -b 6.12 openwrt/target/linux/amlogic
          
     - name: 加载自定义配置
       run: |
