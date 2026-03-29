@@ -135,16 +135,26 @@ jobs:
             
     - name: patch修补
       run: |
-        [ -e patch ] && cp -rf patch/apk-tools/*.patch openwrt/package/system/apk/patches
+        # 1. 强行创建目标目录，防止 cp 找不到家而报错
+        mkdir -p openwrt/package/system/apk/patches
+        mkdir -p openwrt/feeds/luci
+        
+        # 2. 只有当补丁文件存在时才拷贝，即便失败也继续 (|| true)
+        [ -e patch/apk-tools ] && cp -rf patch/apk-tools/*.patch openwrt/package/system/apk/patches || true
+        
+        # 3. 这里的 curl 很关键，是同步官方内核配置
         curl -s https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/config/Config-kernel.in > openwrt/config/Config-kernel.in
         sed -i 's#https://git\.openwrt\.org/feed#https://github.com/openwrt#g; s#https://git\.openwrt\.org/project#https://github.com/openwrt#g' openwrt/feeds.conf.default
+        
         cd openwrt
-        find ./staging_dir/ -name '*' -exec touch {} \; >/dev/null 2>&1
+        # 同步源码订阅源
         ./scripts/feeds update -a
         cd ..
-        [ -e patch ] && cp -rf patch/target openwrt
-        [ -e patch ] && cp -rf patch/luci/*.patch openwrt/feeds/luci
-        [ -e patch ] && cp -rf patch/diy/*.patch openwrt
+        
+        # 4. 同样为后续拷贝加上保护
+        [ -e patch/target ] && cp -rf patch/target openwrt || true
+        [ -e patch/luci ] && cp -rf patch/luci/*.patch openwrt/feeds/luci || true
+        [ -e patch/diy ] && cp -rf patch/diy/*.patch openwrt || true
         
     - name: 加载自定义脚本
       run: |
